@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace YongQing.Models
+namespace YongQing.Entities
 {
     public class NorthwindDbContext : DbContext
     {

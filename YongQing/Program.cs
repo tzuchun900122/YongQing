@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
-using YongQing.Models;
+using YongQing.Entities;
+using YongQing.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +14,9 @@ builder.Services.AddSwaggerGen();
 // 設定 DbContext 並使用 SQL Server
 builder.Services.AddDbContext<NorthwindDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("NorthwindConnection")));
+
+// 註冊泛型 Northwind 資料層到依賴注入容器
+builder.Services.AddTransient(typeof(IRepository<,>), typeof(NorthwindRepository<,>));
 
 var app = builder.Build();
 
