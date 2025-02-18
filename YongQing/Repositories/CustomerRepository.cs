@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 using YongQing.Entities;
 
 namespace YongQing.Repositories
@@ -21,6 +20,18 @@ namespace YongQing.Repositories
 
         public async Task<Customer?> GetByIdAsync(String id) =>
             await RunSafeAsync(() => _northwindDbContext.Customers.FindAsync(id).AsTask());
+
+        public async Task<int> UpdateAsync(string id, Customer customer)
+        {
+            return await RunSafeAsync(async () =>
+            {
+                var existingCustomer = await _northwindDbContext.Customers.FindAsync(id);
+                if (existingCustomer is null) return 0;
+
+                _northwindDbContext.Entry(existingCustomer).CurrentValues.SetValues(customer);
+                return await _northwindDbContext.SaveChangesAsync();
+            }, -1);
+        }
 
         public async Task<int> AddAsync(Customer customer)
         {
@@ -45,9 +56,6 @@ namespace YongQing.Repositories
             }, -1);
         }
 
-        public async Task<int> SaveChangesAsync() =>
-            await RunSafeAsync(() => _northwindDbContext.SaveChangesAsync());
-
         public async Task<T> RunSafeAsync<T>(Func<Task<T>> action, T? fallbackValue = default!)
         {
             try
@@ -61,5 +69,7 @@ namespace YongQing.Repositories
                 return fallbackValue!;
             }
         }
+
+
     }
 }

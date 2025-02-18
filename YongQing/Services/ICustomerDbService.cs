@@ -6,9 +6,9 @@ namespace YongQing.Services
     public interface ICustomerDbService
     {
         Task<List<Customer>?> GetAllAsync();
-        Task<Customer?> GetByIdAsync(String id);
+        Task<Customer?> GetByIdAsync(string id);
         Task<int> CreateAsync(Customer customer);
-        Task<int> PatchAsync(String id, JsonPatchDocument<Customer> patchDoc);
-        Task<int> DeleteAsync(String id);
+        Task<int> UpdateAsync(string id, Customer customer);
+        Task<int> DeleteAsync(string id);
     }
 }

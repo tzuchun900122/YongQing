@@ -27,16 +27,13 @@ namespace YongQing.Controllers
 
         // POST api/<BaseApiController>
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] Customer entity) =>
-            RunSafeAsync(await _customerDbService.CreateAsync(entity));
+        public async Task<IActionResult> Post([FromBody] Customer customer) =>
+            RunSafeAsync(await _customerDbService.CreateAsync(customer));
 
-        // Patch api/<BaseApiController>/5
-        [HttpPatch("{id}")]
-        public async Task<IActionResult> Patch(String id, [FromBody] JsonPatchDocument<Customer> patchDoc)
-        {
-            if (patchDoc == null) return BadRequest(); 
-            return RunSafeAsync(await _customerDbService.PatchAsync(id, patchDoc));
-        }
+        // PUT api/<ValuesController>/5
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Put(String id, [FromBody] Customer customer) =>
+            RunSafeAsync(await _customerDbService.UpdateAsync(id, customer));
 
         // DELETE api/<BaseApiController>/5
         [HttpDelete("{id}")]
