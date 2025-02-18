@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using YongQing.Entities;
 using YongQing.Repositories;
+using YongQing.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,8 +16,9 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<NorthwindDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("NorthwindConnection")));
 
-// 註冊泛型 Northwind 資料層到依賴注入容器
-builder.Services.AddTransient(typeof(IRepository<,>), typeof(NorthwindRepository<,>));
+// 註冊泛型 Northwind 的資料層和邏輯層到依賴注入容器
+builder.Services.AddScoped(typeof(IRepository<,>), typeof(NorthwindRepository<,>));
+builder.Services.AddScoped(typeof(IDbService<,>), typeof(NorthwindDbService<,>));
 
 var app = builder.Build();
 

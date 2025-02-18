@@ -1,11 +1,12 @@
-﻿using YongQing.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using YongQing.Entities;
 
 namespace YongQing.Repositories
 {
-    public class NorthwindRepository<TEntity, TId> : Repository<TEntity, TId, NorthwindDbContext> where TEntity : class
+    public class NorthwindRepository<TEntity, TId> : BaseRepository<TEntity, TId> where TEntity : class
     {
-        public NorthwindRepository(NorthwindDbContext northwindDbContext) 
-        : base(northwindDbContext)
+        public NorthwindRepository(NorthwindDbContext NorthwindDbContext, ILogger<BaseRepository<TEntity, TId>> logger) 
+        : base(NorthwindDbContext, logger)
         {
         }
     }
