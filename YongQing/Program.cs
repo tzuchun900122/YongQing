@@ -16,9 +16,9 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<NorthwindDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("NorthwindConnection")));
 
-// 註冊泛型 Northwind 的資料層和邏輯層到依賴注入容器
-builder.Services.AddScoped(typeof(IRepository<,>), typeof(NorthwindRepository<,>));
-builder.Services.AddScoped(typeof(IDbService<,>), typeof(NorthwindDbService<,>));
+// 註冊 Customer 模型的資料層和邏輯層到依賴注入容器
+builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
+builder.Services.AddScoped<ICustomerDbService, CustomerDbService>();
 
 var app = builder.Build();
 
