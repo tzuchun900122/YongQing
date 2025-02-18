@@ -1,6 +1,6 @@
-﻿using Microsoft.AspNetCore.JsonPatch;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using YongQing.Entities;
+using YongQing.Models;
 using YongQing.Services;
 
 namespace YongQing.Controllers
@@ -15,42 +15,45 @@ namespace YongQing.Controllers
             _customerDbService = customerDbService;
         }
 
-        // GET: api/<BaseApiController>
+        // GET: api/<CustomerApiController>
         [HttpGet]
         public async Task<IActionResult> Get() =>
             RunSafeAsync(await _customerDbService.GetAllAsync());
 
-        // GET api/<BaseApiController>/5
+        // GET api/<CustomerApiController>/Name
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(String id) =>
             RunSafeAsync(await _customerDbService.GetByIdAsync(id));
 
-        // POST api/<BaseApiController>
+        // POST api/<CustomerApiController>
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] Customer customer) =>
             RunSafeAsync(await _customerDbService.CreateAsync(customer));
 
-        // PUT api/<ValuesController>/5
+        // PUT api/<ValuesController>/Name
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(String id, [FromBody] Customer customer) =>
             RunSafeAsync(await _customerDbService.UpdateAsync(id, customer));
 
-        // DELETE api/<BaseApiController>/5
+        // DELETE api/<CustomerApiController>/Name
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(String id) =>
             RunSafeAsync(await _customerDbService.DeleteAsync(id));
 
-        private IActionResult RunSafeAsync<T>(T? result)
+        private IActionResult RunSafeAsync(ApiResult result)
         {
             try
             {
-                if (result == null)
+                if (result.ErrorMessage != string.Empty)
+                    throw new Exception(result.ErrorMessage);
+
+                if (result.Data == null)
                     return NotFound();
 
-                if (result is List<Customer> entities && entities.Count == 0)
+                if (result.Data is List<Customer> customers && customers.Count == 0)
                     return NotFound();
 
-                if (result is int statusCode)
+                if (result.Data is int statusCode)
                 {
                     return statusCode == 0 ? NotFound() : Ok();
                 }

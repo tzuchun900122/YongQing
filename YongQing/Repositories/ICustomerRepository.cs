@@ -1,13 +1,14 @@
 ﻿using YongQing.Entities;
+using YongQing.Models;
 
 namespace YongQing.Repositories
 {
     public interface ICustomerRepository
     {
-        Task<List<Customer>?> GetAllAsync();
-        Task<Customer?> GetByIdAsync(string id);
-        Task<int> AddAsync(Customer customer);
-        Task<int> UpdateAsync(string id, Customer customer);
-        Task<int> DeleteAsync(string id);
+        Task<ApiResult> GetAllAsync();
+        Task<ApiResult> GetByIdAsync(string id);
+        Task<ApiResult> AddAsync(Customer customer);
+        Task<ApiResult> UpdateAsync(string id, Customer customer);
+        Task<ApiResult> DeleteAsync(string id);
     }
 }
