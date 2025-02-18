@@ -12,6 +12,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// 更改 Logger 輸出位置
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
 

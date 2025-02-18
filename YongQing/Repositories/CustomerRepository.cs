@@ -4,7 +4,7 @@ using YongQing.Models;
 
 namespace YongQing.Repositories
 {
-    // 用於 Northwind.dbo.Customers 的資料表
+    // 用於 Northwind.dbo.Customers 資料表
     public class CustomerRepository : ICustomerRepository
     {
         private readonly NorthwindDbContext _northwindDbContext;
@@ -27,25 +27,25 @@ namespace YongQing.Repositories
             return await RunSafeAsync(async () =>
             {
                 var existingCustomer = await _northwindDbContext.Customers.FindAsync(id);
-                if (existingCustomer is null) return 0;
+                if (existingCustomer is null) throw new Exception("資料不存在");
 
                 _northwindDbContext.Entry(existingCustomer).CurrentValues.SetValues(customer);
                 return await _northwindDbContext.SaveChangesAsync();    // 回傳影響筆數
-            }, -1);
+            });
         }
 
         public async Task<ApiResult> AddAsync(Customer customer)
         {
             return await RunSafeAsync(async () =>
             {
-                if (customer is null) return 0;
+                if (customer is null) throw new Exception("輸入資料錯誤");
 
                 var existingCustomer = await _northwindDbContext.Customers.FindAsync(customer.CustomerID);    // 檢查是否存在
-                if (existingCustomer is not null) return 0;
+                if (existingCustomer is not null) throw new Exception("資料已存在");
 
                 await _northwindDbContext.Customers.AddAsync(customer);
                 return await _northwindDbContext.SaveChangesAsync();
-            }, -1);
+            });
         }
 
         public async Task<ApiResult> DeleteAsync(String id)
@@ -53,15 +53,15 @@ namespace YongQing.Repositories
             return await RunSafeAsync(async () =>
             {
                 var existingCustomer = await _northwindDbContext.Customers.FindAsync(id);
-                if (existingCustomer is null) return 0;
+                if (existingCustomer is null) throw new Exception("資料不存在");
 
                 _northwindDbContext.Remove(existingCustomer);
                 return await _northwindDbContext.SaveChangesAsync();
-            }, -1);
+            });
         }
 
         // 統一例外處理，出錯回傳設定值，方便控制層管理，並記錄錯誤訊息
-        private async Task<ApiResult> RunSafeAsync<T>(Func<Task<T>> action, T? fallbackValue = default!)
+        private async Task<ApiResult> RunSafeAsync<T>(Func<Task<T>> action)
         {
             try
             {
@@ -79,7 +79,7 @@ namespace YongQing.Repositories
                 _logger.LogError(ex, "Customer 資料庫錯誤發生於: {Time}", currentTime);
                 return new ApiResult
                 {
-                    Data = fallbackValue,
+                    Data = default!,
                     ErrorMessage = ex.ToString()
                 } ;
             }

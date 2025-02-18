@@ -4,6 +4,7 @@ using YongQing.Repositories;
 
 namespace YongQing.Services
 {
+    // 用於操作 Northwind.dbo.Customers 資料表的 CRUD
     public class CustomerDbService : ICustomerDbService
     {
         private readonly ICustomerRepository _customerRepository;
